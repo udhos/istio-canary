@@ -1,6 +1,6 @@
 # istio-canary
 
-## Before starting
+# Before starting
 
 ```
 kind version
@@ -10,7 +10,7 @@ helm version
 version.BuildInfo{Version:"v3.13.3", GitCommit:"c8b948945e52abba22ff885446a1486cb5fd3474", GitTreeState:"clean", GoVersion:"go1.20.11"}
 ```
 
-## istio
+# istio
 
 ```
 kind create cluster --name lab
@@ -31,7 +31,7 @@ istio-base	istio-system	1       	2024-02-22 19:19:21.779586644 -0300 -03	deploye
 istiod    	istio-system	1       	2024-02-22 19:19:28.714069744 -0300 -03	deployed	istiod-1.20.3	1.20.3     
 ```
 
-## services
+# services
 
 ```
 kubectl create ns develop
@@ -43,14 +43,18 @@ helm upgrade -n develop --install pismo-egress miniapi/miniapi --values values-m
 helm upgrade -n develop --install npc-regress-pismo miniapi/miniapi --values values-miniapi-npc-regress-pismo.yaml
 ```
 
-## Canary
+# Canary
 
 ```
 ./canary.sh develop pismo-egress 3000 3000 pismo-egress npc-regress-pismo 50
 ```
 
-## Clean-up
+# Clean-up
 
 ```
 kind delete cluster --name lab
 ```
+
+# References
+
+https://istio.io/latest/docs/reference/config/networking/virtual-service/
