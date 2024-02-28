@@ -1,0 +1,108 @@
+# Default values for miniapi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: udhos/miniapi
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: pismo-egress
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  #name: ""
+
+# redeploy:
+#
+# 'always': adds a random annotation to Deployment in
+#           order to redeploy the pods whenever the chart is reapplied.
+#
+# 'reconfig': adds annotations with checksums of configurations in
+#             order to redeploy the pods whenever configuration is changed.
+#
+# https://v3.helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments
+#
+redeploy: always
+
+#podAnnotations: {}
+podAnnotations:
+  "sidecar.istio.io/inject": "true"
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+podHealthCheck:
+  port: 3000
+  path: /health
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: miniapi.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# add custom labels to deployment pods
+customLabels:
+  app: pismo-egress
+
+resources:
+  requests:
+    cpu: 300m
+    memory: 100Mi
+    ephemeral-storage: 100Mi
+  limits:
+    cpu: 2000m
+    memory: 300Mi
+    ephemeral-storage: 200Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 100
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+#
+# See: https://stackoverflow.com/questions/72816925/helm-templating-in-configmap-for-values-yaml
+#
+configMapProperties:
+  ADDR: :3000
+  ROUTE: /v1/hello;/v1/world;/card/{cardId}
+  HEALTH: /health
