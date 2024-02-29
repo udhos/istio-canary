@@ -46,7 +46,15 @@ helm upgrade -n develop --install npc-regress-pismo miniapi/miniapi --values val
 # Canary
 
 ```
+# canary does not use DestinationRule
+# canary relies on two independent service: pismo-egress and npc-regress-pismo
+#
 ./canary.sh develop pismo-egress 3000 3000 pismo-egress npc-regress-pismo 50
+
+# dr-canary uses DestinationRule
+# canary relies on a central service "pismo-egress" that selects PODs for both deployments: pismo-egress and npc-regress-pismo
+#
+./dr-canary.sh develop pismo-egress 3000 3000 pismo-egress npc-regress-pismo 50
 ```
 
 # Clean-up

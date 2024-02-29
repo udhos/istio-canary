@@ -71,7 +71,7 @@ spec:
     targetPort: $target_port
     name: http
   selector:
-    app: $lab
+    $lab
   type: ClusterIP
 EOF
 }
@@ -153,7 +153,7 @@ if [ $weight_v1 -eq 100 ]; then
 
     #kubectl -n $namespace expose deploy $label_v1 --port=$port --target-port=$target_port --name=$service
 
-    svc_manifest $service $label_v1 > apply-svc.yaml
+    svc_manifest $service "app: $label_v1" > apply-svc.yaml
     kubectl -n $namespace apply -f apply-svc.yaml
 
     exit
@@ -170,7 +170,7 @@ if [ $weight_v1 -eq 0 ]; then
 
     #kubectl -n $namespace expose deploy $label_v2 --port=$port --target-port=$target_port --name=$service
 
-    svc_manifest $service $label_v2 > apply-svc.yaml
+    svc_manifest $service "app: $label_v2" > apply-svc.yaml
     kubectl -n $namespace apply -f apply-svc.yaml
 
     exit
@@ -181,11 +181,11 @@ fi
 #
 
 kubectl -n $namespace delete svc $label_v1
-svc_manifest $label_v1 $label_v1 > apply-svc-$label_v1.yaml
+svc_manifest $label_v1 "service: $service" > apply-svc-$label_v1.yaml
 kubectl -n $namespace apply -f apply-svc-$label_v1.yaml
 
 kubectl -n $namespace delete svc $label_v2
-svc_manifest $label_v2 $label_v2 > apply-svc-$label_v2.yaml
+svc_manifest $label_v2 "service: $service" > apply-svc-$label_v2.yaml
 kubectl -n $namespace apply -f apply-svc-$label_v2.yaml
 
 vs_manifests > apply-vs.yaml

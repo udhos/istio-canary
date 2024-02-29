@@ -77,6 +77,7 @@ ingress:
 # add custom labels to deployment pods
 customLabels:
   app: npc-regress-pismo
+  service: pismo-egress # shared label used by dr-canary
 
 resources:
   requests:
